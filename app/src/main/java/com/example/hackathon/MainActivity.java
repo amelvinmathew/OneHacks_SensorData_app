@@ -16,7 +16,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
    TextView accelerometerX, accelerometerY, accelerometerZ, ambientTemperature;
     private SensorManager sensorManager;
     private Sensor accelerometer;
-    private Sensor ambientTemperatureSensor;
 
 
     @Override
@@ -28,7 +27,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         accelerometerX = findViewById(R.id.accelerometerX);
         accelerometerY = findViewById(R.id.accelerometerY);
         accelerometerZ = findViewById(R.id.accelerometerZ);
-        ambientTemperature = findViewById(R.id.ambientTemperature);
 
         //declare sensor manager
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
@@ -45,9 +43,13 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-
-            float[] sen = event.values;
-            ambientTemperature.setText((int) sen[0]);
+           float[] accelerometerValues = new float[0];
+           if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+               accelerometerValues = event.values;
+               textAccelerometerX.setText("X " + accelerometerValues[0]);
+               textAccelerometerY.setText("Y " + accelerometerValues[1]);
+               textAccelerometerZ.setText("Z " + accelerometerValues[2]);
+           }
         }
     }
 
