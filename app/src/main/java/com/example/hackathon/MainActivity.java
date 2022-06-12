@@ -7,12 +7,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.widget.TextView;
-
-import com.jjoe64.graphview.GraphView;
-import com.jjoe64.graphview.series.DataPoint;
-import com.jjoe64.graphview.series.LineGraphSeries;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +28,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             textPressure,
             textRelativeHumidity;
 
-
     private SensorManager sensorManager;
     private List<Sensor> allSensors;
     private Sensor accelerometer;
@@ -45,7 +39,31 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private Sensor pressure;
     private Sensor relativeHumidity;
 
+    private float[] accelerometerCurrentValues       = new float[3];
+    private float[] linearAccelerometerCurrentValues = new float[3];
+    private float[] gyroscopeCurrentValues           = new float[3];
+    private float[] magnetometerCurrentValues        = new float[3];
+    private float[] ambientTemperatureCurrentValues  = new float[1];
+    private float[] lightCurrentValues               = new float[1];
+    private float[] pressureCurrentValues            = new float[1];
+    private float[] relativeHumidityCurrentValues    = new float[1];
 
+    private ArrayList<Float> accelerometerXValues       = new ArrayList<Float>();
+    private ArrayList<Float> accelerometerYValues       = new ArrayList<Float>();
+    private ArrayList<Float> accelerometerZValues       = new ArrayList<Float>();
+    private ArrayList<Float> linearAccelerometerXValues = new ArrayList<Float>();
+    private ArrayList<Float> linearAccelerometerYValues = new ArrayList<Float>();
+    private ArrayList<Float> linearAccelerometerZValues = new ArrayList<Float>();
+    private ArrayList<Float> gyroscopeXValues           = new ArrayList<Float>();
+    private ArrayList<Float> gyroscopeYValues           = new ArrayList<Float>();
+    private ArrayList<Float> gyroscopeZValues           = new ArrayList<Float>();
+    private ArrayList<Float> magnetometerXValues        = new ArrayList<Float>();
+    private ArrayList<Float> magnetometerYValues        = new ArrayList<Float>();
+    private ArrayList<Float> magnetometerZValues        = new ArrayList<Float>();
+    private ArrayList<Float> ambientTemperatureValues   = new ArrayList<Float>();
+    private ArrayList<Float> lightValues                = new ArrayList<Float>();
+    private ArrayList<Float> pressureValues             = new ArrayList<Float>();
+    private ArrayList<Float> relativeHumidityValues     = new ArrayList<Float>();
 
     @SuppressLint("MissingPermission")
     @Override
@@ -55,35 +73,33 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         //get text ids
-        textSensorList = findViewById(R.id.all);
+        //textSensorList = findViewById(R.id.all);
 
         textAccelerometerX = findViewById(R.id.accelerometerX);
         textAccelerometerY = findViewById(R.id.accelerometerY);
         textAccelerometerZ = findViewById(R.id.accelerometerZ);
 
-        textLinearAccelerometerX = findViewById(R.id.linearAccerlarationX);
-        textLinearAccelerometerY = findViewById(R.id.linearAccerlarationY);
-        textLinearAccelerometerZ = findViewById(R.id.linearAccerlarationZ);
+//        textLinearAccelerometerX = findViewById(R.id.linearAccerlarationX);
+//        textLinearAccelerometerY = findViewById(R.id.linearAccerlarationY);
+//        textLinearAccelerometerZ = findViewById(R.id.linearAccerlarationZ);
 
-        textGyroscopeX = findViewById(R.id.gyroscopeX);
-        textGyroscopeY = findViewById(R.id.gyroscopeY);
-        textGyroscopeZ = findViewById(R.id.gyroscopeZ);
-
-        textMagnetometerX = findViewById(R.id.magnetometerX);
-        textMagnetometerY = findViewById(R.id.magnetometerY);
-        textMagnetometerZ = findViewById(R.id.magnetometerZ);
+//        textGyroscopeX = findViewById(R.id.gyroscopeX);
+//        textGyroscopeY = findViewById(R.id.gyroscopeY);
+//        textGyroscopeZ = findViewById(R.id.gyroscopeZ);
+//
+//        textMagnetometerX = findViewById(R.id.magnetometerX);
+//        textMagnetometerY = findViewById(R.id.magnetometerY);
+//        textMagnetometerZ = findViewById(R.id.magnetometerZ);
 
 
         textAmbientTemperature = findViewById(R.id.ambientTemperature);
-
-        textLight = findViewById(R.id.light);
-
-        textPressure = findViewById(R.id.pressure);
-
-        textRelativeHumidity = findViewById(R.id.relativeHumidity);
-
-        GraphView ambientTemperatureGraph = (GraphView) findViewById(R.id.ambientTemperaturegraph);
-
+//
+//        textLight = findViewById(R.id.light);
+//
+//        textPressure = findViewById(R.id.pressure);
+//
+//        textRelativeHumidity = findViewById(R.id.relativeHumidity);
+        
         ////////////////////////////////////////////////////////////////////////////////////////////
         //declare sensors/manager
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
@@ -110,9 +126,44 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         sensorManager.registerListener(MainActivity.this, relativeHumidity,    SensorManager.SENSOR_DELAY_UI);
 
         ////////////////////////////////////////////////////////////////////////////////////////////
-        LineGraphSeries<DataPoint> series = new LineGraphSeries<DataPoint>(new DataPoint[]{
 
-        });
+
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                accelerometerXValues.add(accelerometerCurrentValues[0]);
+                accelerometerYValues.add(accelerometerCurrentValues[1]);
+                accelerometerZValues.add(accelerometerCurrentValues[2]);
+
+                linearAccelerometerXValues.add(linearAccelerometerCurrentValues[0]);
+                linearAccelerometerYValues.add(linearAccelerometerCurrentValues[1]);
+                linearAccelerometerZValues.add(linearAccelerometerCurrentValues[2]);
+
+                gyroscopeXValues.add(gyroscopeCurrentValues[0]);
+                gyroscopeYValues.add(gyroscopeCurrentValues[1]);
+                gyroscopeZValues.add(gyroscopeCurrentValues[2]);
+
+                magnetometerXValues.add(magnetometerCurrentValues[0]);
+                magnetometerYValues.add(magnetometerCurrentValues[1]);
+                magnetometerZValues.add(magnetometerCurrentValues[2]);
+
+                ambientTemperatureValues.add(ambientTemperatureCurrentValues[0]);
+
+                lightValues.add(lightCurrentValues[0]);
+
+                pressureValues.add(pressureCurrentValues[0]);
+
+                relativeHumidityValues.add(relativeHumidityCurrentValues[0]);
+
+                System.out.println(ambientTemperatureValues);
+            }
+        }, 0, 1000);
 
 
         ////////////////////////////////////////////////////////////////////////////////////////////
@@ -133,60 +184,52 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     @SuppressLint("SetTextI18n")
     @Override
     public void onSensorChanged(SensorEvent event) {
-        float[] accelerometerValues = new float[0];
         if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
-            accelerometerValues = event.values;
-            textAccelerometerX.setText("X " + accelerometerValues[0]);
-            textAccelerometerY.setText("Y " + accelerometerValues[1]);
-            textAccelerometerZ.setText("Z " + accelerometerValues[2]);
+            accelerometerCurrentValues = event.values;
+            textAccelerometerX.setText("X " + accelerometerCurrentValues[0]);
+            textAccelerometerY.setText("Y " + accelerometerCurrentValues[1]);
+            textAccelerometerZ.setText("Z " + accelerometerCurrentValues[2]);
         }
 
-        float[] linearAccelerometerValues = new float[0];
         if (event.sensor.getType() == Sensor.TYPE_LINEAR_ACCELERATION) {
-            linearAccelerometerValues = event.values;
-            textLinearAccelerometerX.setText("X " + Math.round(linearAccelerometerValues[0]));
-            textLinearAccelerometerY.setText("Y " + Math.round(linearAccelerometerValues[1]));
-            textLinearAccelerometerZ.setText("Z " + Math.round(linearAccelerometerValues[2]));
+            linearAccelerometerCurrentValues = event.values;
+            textLinearAccelerometerX.setText("X " + Math.round(linearAccelerometerCurrentValues[0]));
+            textLinearAccelerometerY.setText("Y " + Math.round(linearAccelerometerCurrentValues[1]));
+            textLinearAccelerometerZ.setText("Z " + Math.round(linearAccelerometerCurrentValues[2]));
         }
 
-        float[] gyroscopeValues = new float[0];
         if (event.sensor.getType() == Sensor.TYPE_GYROSCOPE) {
-            gyroscopeValues = event.values;
-            textGyroscopeX.setText("X " + gyroscopeValues[0]);
-            textGyroscopeY.setText("Y " + gyroscopeValues[1]);
-            textGyroscopeZ.setText("Z " + gyroscopeValues[2]);
+            gyroscopeCurrentValues = event.values;
+            textGyroscopeX.setText("X " + gyroscopeCurrentValues[0]);
+            textGyroscopeY.setText("Y " + gyroscopeCurrentValues[1]);
+            textGyroscopeZ.setText("Z " + gyroscopeCurrentValues[2]);
         }
 
-        float[] magnetometerValues = new float[0];
         if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
-            magnetometerValues = event.values;
-            textMagnetometerX.setText("X " + magnetometerValues[0]);
-            textMagnetometerY.setText("Y " + magnetometerValues[1]);
-            textMagnetometerZ.setText("Z " + magnetometerValues[2]);
+            magnetometerCurrentValues = event.values;
+            textMagnetometerX.setText("X " + magnetometerCurrentValues[0]);
+            textMagnetometerY.setText("Y " + magnetometerCurrentValues[1]);
+            textMagnetometerZ.setText("Z " + magnetometerCurrentValues[2]);
         }
 
-        float[] ambientTemperatureValues =  new float[0];
         if (event.sensor.getType() == Sensor.TYPE_AMBIENT_TEMPERATURE){
-            ambientTemperatureValues = event.values;
-            textAmbientTemperature.setText("Ambient Temp: " + ambientTemperatureValues[0]);
+            ambientTemperatureCurrentValues = event.values;
+            textAmbientTemperature.setText("Ambient Temp: " + ambientTemperatureCurrentValues[0]);
         }
 
-        float[] lightValues =  new float[0];
         if (event.sensor.getType() == Sensor.TYPE_LIGHT){
-            lightValues = event.values;
-            textLight.setText("Light Value: " + lightValues[0]);
+            lightCurrentValues = event.values;
+            textLight.setText("Light Value: " + lightCurrentValues[0]);
         }
 
-        float[] pressureValues =  new float[0];
         if (event.sensor.getType() == Sensor.TYPE_PRESSURE){
-            pressureValues = event.values;
-            textPressure.setText("Pressure: " + pressureValues[0]);
+            pressureCurrentValues = event.values;
+            textPressure.setText("Pressure: " + pressureCurrentValues[0]);
         }
 
-        float[] relativeHumidityValues =  new float[0];
         if (event.sensor.getType() == Sensor.TYPE_RELATIVE_HUMIDITY){
-            relativeHumidityValues = event.values;
-            textRelativeHumidity.setText("Relative Humidity: " + relativeHumidityValues[0]);
+            relativeHumidityCurrentValues = event.values;
+            textRelativeHumidity.setText("Relative Humidity: " + relativeHumidityCurrentValues[0]);
         }
 
 
